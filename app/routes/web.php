@@ -5,9 +5,11 @@ use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
+    if (Auth::check()) {
+        return redirect('/login');
+    }
+
+    return redirect('/dashboard');
 })->name('home');
 
 Route::get('dashboard', function () {
