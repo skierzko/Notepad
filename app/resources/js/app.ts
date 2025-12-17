@@ -8,7 +8,7 @@ import { initializeTheme } from './composables/useAppearance';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
-createInertiaApp({
+const app = createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     resolve: (name) =>
         resolvePageComponent(
@@ -24,6 +24,10 @@ createInertiaApp({
         color: '#4B5563',
     },
 });
+
+if (import.meta.env.DEV) {
+    app.config.devtools = true
+}
 
 // This will set light / dark mode on page load...
 initializeTheme();
