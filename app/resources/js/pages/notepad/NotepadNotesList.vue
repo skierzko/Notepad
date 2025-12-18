@@ -1,6 +1,6 @@
 <script setup lang="js">
 import { defineProps } from 'vue';
-import NotesNotesRow from './NotesNotesRow.vue';
+import NotepadNotesRow from './NotepadNotesRow.vue';
 import { Notebook } from 'lucide-vue-next';
 
 defineProps({
@@ -20,7 +20,7 @@ defineProps({
 
         <hr />
 
-        <NotesNotesRow />
-        <NotesNotesRow />
+        <NotepadNotesRow />
+        <NotepadNotesRow />
     </div>
 </template>

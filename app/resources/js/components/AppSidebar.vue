@@ -11,7 +11,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { notes } from '@/routes';
+import { notepad } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { SquareArrowOutUpRight, Notebook } from 'lucide-vue-next';
@@ -20,7 +20,7 @@ import AppLogo from './AppLogo.vue';
 const mainNavItems: NavItem[] = [
     {
         title: 'My Notepad',
-        href: notes(),
+        href: notepad(),
         icon: Notebook,
     },
 ];
@@ -40,7 +40,7 @@ const footerNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="notes()">
+                        <Link :href="notepad()">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>

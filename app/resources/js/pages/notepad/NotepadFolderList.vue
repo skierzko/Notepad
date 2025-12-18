@@ -1,6 +1,6 @@
 <script setup lang="js">
 import { defineProps } from 'vue';
-import NotesFolderRow from './NotesFolderRow.vue';
+import NotepadFolderRow from './NotepadFolderRow.vue';
 import { Folder } from 'lucide-vue-next';
 
 defineProps({
@@ -19,7 +19,7 @@ defineProps({
         </div>
         <hr />
 
-        <NotesFolderRow />
-        <NotesFolderRow />
+        <NotepadFolderRow />
+        <NotepadFolderRow />
     </div>
 </template>
