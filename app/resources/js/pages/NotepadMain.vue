@@ -11,6 +11,17 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: dashboard().url,
     },
 ];
+
+defineProps({
+    foldersList: {
+        type: Array,
+        required: true,
+    },
+    notesList: {
+        type: Array,
+        required: true,
+    },
+});
 </script>
 
 <template>
@@ -18,7 +29,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
     <AppLayout :breadcrumbs="breadcrumbs">
        <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-            <NotepadApp :folders-list="[]" :notes-list="[]" />
+            <NotepadApp :folders-list="foldersList" :notes-list="notesList" />
        </div>
     </AppLayout>
 </template>

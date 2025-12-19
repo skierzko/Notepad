@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps } from 'vue';
 import NotepadFolderList from './NotepadFolderList.vue';
 import NotepadNotesList from './NotepadNotesList.vue';
 import NotepadNotesDetails from './NotepadNotesDetails.vue';
@@ -14,13 +13,12 @@ defineProps({
         required: true,
     },
 });
-
 </script>
 
 <template>
     <div class="flex gap-4 h-[calc(100vh-130px)]">
         <NotepadFolderList :list="foldersList" />
-        <NotepadNotesList :list="notesList" />
+        <NotepadNotesList :list="notesList" :folders-empty="foldersList.length === 0" />
         <NotepadNotesDetails />
     </div>
 </template>

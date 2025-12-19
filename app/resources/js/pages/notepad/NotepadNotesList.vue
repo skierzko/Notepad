@@ -7,6 +7,9 @@ defineProps({
     list: {
         type: Array,
         required: true,
+    },
+    foldersEmpty: {
+        type: Boolean,
     }
 });
 </script>
@@ -20,7 +23,10 @@ defineProps({
 
         <hr />
 
-        <NotepadNotesRow />
-        <NotepadNotesRow />
+        <NotepadNotesRow v-for="note in list" :key="note.id" />
+
+        <div v-if="foldersEmpty" class="p-2 text-center">
+            Before creating a note, create a folder.
+        </div>
     </div>
 </template>
