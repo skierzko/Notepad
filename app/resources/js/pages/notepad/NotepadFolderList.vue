@@ -5,18 +5,25 @@ import { Folder } from 'lucide-vue-next';
 import FolderCreatingDialog from './dialog/FolderCreatingDialog.vue';
 import { Folder as FolderInterface } from './interfaces/Folder';
 
-defineProps({
+const props = defineProps({
     list: {
         type: Array as PropType<FolderInterface[]>,
+        required: true,
+    },
+    currentFolderId: {
+        type: Number as PropType<number|null>,
+        default: null,
         required: true,
     }
 });
 
-const activeFolder = ref<number|null>(null)
+const emit = defineEmits<{
+  (e: 'setAsActive', id: number): void
+}>()
 
 const setAsActive = (id: number) => {
-    activeFolder.value = id;
-}
+    emit('setAsActive', id);
+};
 </script>
 
 <template>
@@ -36,7 +43,7 @@ const setAsActive = (id: number) => {
             :data="folder"
             :key="folder.id"
             @set-as-active="setAsActive"
-            :is-active="folder.id === activeFolder"
+            :is-active="folder.id === currentFolderId"
         />
     </div>
 </template>

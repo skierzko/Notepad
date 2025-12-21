@@ -4,6 +4,8 @@ import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import NotepadApp from './notepad/NotepadApp.vue';
+import { PropType } from 'vue';
+import { Folder } from './notepad/interfaces/Folder';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -14,11 +16,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 defineProps({
     foldersList: {
-        type: Array,
-        required: true,
-    },
-    notesList: {
-        type: Array,
+        type: Array as PropType<Folder[]>,
         required: true,
     },
 });
@@ -29,7 +27,7 @@ defineProps({
 
     <AppLayout :breadcrumbs="breadcrumbs">
        <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-            <NotepadApp :folders-list="foldersList" :notes-list="notesList" />
+            <NotepadApp :folders-list="foldersList" />
        </div>
     </AppLayout>
 </template>

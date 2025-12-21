@@ -9,7 +9,7 @@ defineProps({
 <template>
     <div class="w-full border p-2">
         <div class="font-bold">
-            <NotebookPen class="inline relative top-[-2px]" />
+            <NotebookPen class="inline relative -top-0.5" />
             Details: Name
         </div>
         <hr />

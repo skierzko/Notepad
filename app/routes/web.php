@@ -11,7 +11,13 @@ Route::get('dashboard', [DashboardController::class, 'index'])->middleware(['aut
 
 Route::prefix('/notepad')->middleware(['auth', 'verified'])->group(function() {
     Route::get('', [NotepadController::class, 'index'])->name('notepad');
-    Route::post('save-folder', [NotepadController::class, 'saveFolder'])->name('save-folder');
+
+    Route::post('folder', [NotepadController::class, 'saveFolder'])->name('save-folder');
+
+    Route::get('folder/{notepadFolder}/notes-list', [NotepadController::class, 'getNotesListByFolderId'])->name('get-notes-list');
+    Route::get('folder/{notepadFolder}/{notepadNote?}', [NotepadController::class, 'getNote'])->name('get-note');
+    Route::post('folder/{notepadFolder}/create-note', [NotepadController::class, 'createNote'])->name('create-note');
+    Route::post('folder/{notepadFolder}/{notepadNote?}', [NotepadController::class, 'saveNote'])->name('save-note');
 });
 
 require __DIR__.'/settings.php';

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @property int $id
- * @property int $notepad_category_id
+ * @property int $notepad_folder_id
  * @property int $user_id
  * @property string $title
  * @property string|null $description
@@ -19,11 +20,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \App\Models\NotepadCategory $category
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\NotepadContent[] $contents
  */
-class Notepad extends Model
+class NotepadNote extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'notepad';
+    protected $table = 'notepad_notes';
+
+    public static function query()
+    {
+        return NotepadNote::where('user_id', Auth::user()->id);
+    }
 
     public function user()
     {
@@ -32,12 +38,12 @@ class Notepad extends Model
 
     public function notepadCategory()
     {
-        return $this->belongsTo(NotepadCategory::class, 'notepad_category_id');
+        return $this->belongsTo(NotepadFolder::class, 'notepad_folder_id');
     }
 
     public function notepadContents()
     {
-        return $this->hasMany(NotepadContent::class, 'notepad_id')
+        return $this->hasMany(NotepadContent::class, 'notepad_note_id')
             ->orderBy('group_order')
             ->orderBy('column_order');
     }

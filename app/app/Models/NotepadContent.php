@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
- * @property int $notepad_id
+ * @property int $notepad_note_id
  * @property int $group_order
  * @property int $column
  * @property string|null $content
@@ -25,6 +25,6 @@ class NotepadContent extends Model
 
     public function note()
     {
-        return $this->belongsTo(Notepad::class, 'notepad_id');
+        return $this->belongsTo(NotepadNote::class, 'notepad_note_id');
     }
 }

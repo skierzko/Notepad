@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @property int $id
@@ -15,11 +16,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notepad[] $notepad
  */
-class NotepadCategory extends Model
+class NotepadFolder extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'notepad_categories';
+    protected $table = 'notepad_folders';
+
+    public static function query()
+    {
+        return NotepadFolder::where('user_id', Auth::user()->id);
+    }
 
     public function user()
     {
@@ -28,6 +34,6 @@ class NotepadCategory extends Model
 
     public function notepad()
     {
-        return $this->hasMany(Notepad::class, 'notepad_category_id');
+        return $this->hasMany(NotepadNote::class, 'notepad_folder_id');
     }
 }
