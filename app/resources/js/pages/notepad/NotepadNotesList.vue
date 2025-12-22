@@ -6,11 +6,16 @@ import { Notebook } from 'lucide-vue-next';
 import { PropType } from 'vue';
 import { Note } from './interfaces/Note';
 import { CirclePlus } from 'lucide-vue-next';
-import { getNotesList, saveNote, createNote } from '@/routes';
+import { getNotesList, createNote } from '@/routes';
 
 const props = defineProps({
     currentFolderId: {
-        type: Number as PropType<number|null>,
+        type: [Number, null] as PropType<number|null>,
+        default: null,
+        required: true,
+    },
+    currentNoteId: {
+        type: [Number, null] as PropType<number|null>,
         default: null,
         required: true,
     },
@@ -20,10 +25,7 @@ const props = defineProps({
     }
 });
 
-const currentNotesId = ref<number|null>(null);
 const list = ref<Note[]>([]);
-// @todo
-const saveNoteUrl = props.currentFolderId ? saveNote({ notepadFolder: props.currentFolderId, notepadNote: undefined }).url : null;
 
 const loadNotesList = () => {
     if (props.currentFolderId === null) {
@@ -33,6 +35,7 @@ const loadNotesList = () => {
     axios.get(getNotesList({ notepadFolder: props.currentFolderId }).url)
         .then((response) => {
             list.value = response.data.list;
+            emit('setAsActive', response.data.list[0].id ?? null);
         })
         .catch(() => {
 
@@ -57,9 +60,13 @@ const createNewNote = async () => {
         });
 };
 
-const setNoteAsActive = (id: number) => {
-    currentNotesId.value = id;
-}
+const emit = defineEmits<{
+  (e: 'setAsActive', id: number): void
+}>()
+
+const setAsActive = (id: number) => {
+    emit('setAsActive', id);
+};
 </script>
 
 <template>
@@ -77,7 +84,13 @@ const setNoteAsActive = (id: number) => {
 
         <hr />
 
-        <NotepadNotesRow v-for="note in list" :key="note.id" :data="note" :is-active="currentNotesId === note.id" @set-as-active="setNoteAsActive" />
+        <NotepadNotesRow
+            v-for="note in list"
+            :key="note.id"
+            :data="note"
+            :is-active="note.id === props.currentNoteId"
+            @set-as-active="setAsActive"
+            />
 
         <div v-if="foldersCount === 0" class="p-2 text-center">
             Before creating a note, create a folder.

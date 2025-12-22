@@ -42,8 +42,8 @@ const setAsActive = (id: number) => {
             v-for="folder in list"
             :data="folder"
             :key="folder.id"
-            @set-as-active="setAsActive"
             :is-active="folder.id === currentFolderId"
+            @set-as-active="setAsActive"
         />
     </div>
 </template>

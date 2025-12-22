@@ -15,7 +15,6 @@ class NotepadController extends Controller
     public function index(): Response
     {
         $categories = NotepadFolder::query()->where('user_id', '=', Auth::user()->id)->get();
-        $notepadNotes = NotepadNote::query()->where('user_id', '=', Auth::user()->id)->get();
 
         return Inertia::render('NotepadMain', [
             'foldersList' => $categories,
@@ -49,7 +48,17 @@ class NotepadController extends Controller
 
     public function getNote(NotepadFolder $notepadFolder, ?NotepadNote $notepadNote): JsonResponse
     {
-        return response()->json([]);
+        if ($notepadNote?->notepad_folder_id !== $notepadFolder->id) {
+            return response()->json([
+                'status' => false,
+                'note' => []
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'note' => $notepadNote
+        ]);
     }
 
     public function createNote(NotepadFolder $notepadFolder): JsonResponse
