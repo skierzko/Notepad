@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref, PropType, watch } from 'vue';
 import { NotebookPen } from 'lucide-vue-next';
-import { getNote } from '@/routes';
+import { getNote, saveNote } from '@/routes';
 import axios from 'axios';
 import { Note } from './interfaces/Note';
 import dayjs from "dayjs";
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.bubble.css';
 
 const props = defineProps({
     currentFolderId: {
@@ -40,6 +42,34 @@ const formatDate = (date: string) => {
 watch(() => [props.currentFolderId, props.currentNoteId], () => {
     loadNoteDetails();
 });
+
+let timeoutId: ReturnType<typeof setTimeout> | null = null;
+const saveNoteDetails = async () => {
+
+    clearTimeoutIfPossible();
+
+    timeoutId = setTimeout(async () => {
+        if (props.currentFolderId === null || props.currentNoteId === null) {
+            return;
+        }
+
+        await axios.post(saveNote({ notepadFolder: props.currentFolderId, notepadNote: props.currentNoteId }).url, {
+            title: details.value.title,
+            description: details.value.description,
+        })
+        .finally(() => {
+            timeoutId = null;
+        });
+    }, 1500);
+};
+
+const clearTimeoutIfPossible = () => {
+    if (timeoutId === null) {
+        return;
+    }
+
+    clearTimeout(timeoutId);
+};
 </script>
 
 <template>
@@ -58,8 +88,14 @@ watch(() => [props.currentFolderId, props.currentNoteId], () => {
             <div>First modity: {{ formatDate(details.created_at) }}</div>
             <div>Last modify: {{ formatDate(details.updated_at) }}</div>
         </div>
-        
 
-        <textarea v-model="details.description" class="w-full h-[400px] mt-2 border p-2 focus:outline-none" />
+        <QuillEditor
+            v-model:content="details.description"
+            class="w-full h-[calc(100vh-220px)] mt-2 border p-2 focus:outline-none"
+            content-type="html"
+            theme="bubble"
+            :toolbar="[{ size: [ 'small', false, 'large', 'huge' ]}, 'bold', 'italic', 'underline']"
+            @update:content="saveNoteDetails"
+        />
     </div>
 </template>
