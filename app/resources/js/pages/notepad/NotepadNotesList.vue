@@ -27,7 +27,7 @@ const props = defineProps({
 
 const list = ref<Note[]>([]);
 
-const loadNotesList = () => {
+const loadNotesList = (withoutSetActive: boolean = false) => {
     if (props.currentFolderId === null) {
         return;
     }
@@ -35,6 +35,11 @@ const loadNotesList = () => {
     axios.get(getNotesList({ notepadFolder: props.currentFolderId }).url)
         .then((response) => {
             list.value = response.data.list;
+
+            if (withoutSetActive) {
+                return;
+            }
+            
             emit('setAsActive', response.data.list[0].id ?? null);
         })
         .catch(() => {
@@ -67,6 +72,10 @@ const emit = defineEmits<{
 const setAsActive = (id: number) => {
     emit('setAsActive', id);
 };
+
+defineExpose({
+  loadNotesList,
+});
 </script>
 
 <template>

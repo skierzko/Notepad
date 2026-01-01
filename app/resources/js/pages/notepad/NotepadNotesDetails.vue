@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import axios from 'axios';
+import dayjs from "dayjs";
 import { ref, PropType, watch } from 'vue';
 import { NotebookPen } from 'lucide-vue-next';
 import { getNote, saveNote } from '@/routes';
-import axios from 'axios';
 import { Note } from './interfaces/Note';
-import dayjs from "dayjs";
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.bubble.css';
 
@@ -21,6 +21,11 @@ const props = defineProps({
     }
 });
 
+const emit = defineEmits<{
+    (e: 'update-notes-list', details: Note): void,
+}>()
+
+const quillEdytor = ref<any>(null);
 const details = ref<Note>({} as Note);
 
 const loadNoteDetails = async () => {
@@ -31,6 +36,7 @@ const loadNoteDetails = async () => {
     await axios.get(getNote({ notepadFolder: props.currentFolderId, notepadNote: props.currentNoteId }).url)
         .then((response) => {
             details.value = response.data.note;
+            quillEdytor.value.setContents(response.data.note.description);
         })
 }
 loadNoteDetails();
@@ -41,6 +47,10 @@ const formatDate = (date: string) => {
 
 watch(() => [props.currentFolderId, props.currentNoteId], () => {
     loadNoteDetails();
+});
+
+watch(() => details.value.title, () => {
+    saveNoteDetails();
 });
 
 let timeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -57,6 +67,12 @@ const saveNoteDetails = async () => {
             title: details.value.title,
             description: details.value.description,
         })
+        .then((response) => {
+            if (response.data.status) {
+                details.value = response.data.note;
+                updateNotesList();
+            }
+        })
         .finally(() => {
             timeoutId = null;
         });
@@ -69,6 +85,10 @@ const clearTimeoutIfPossible = () => {
     }
 
     clearTimeout(timeoutId);
+};
+
+const updateNotesList = () => {
+    emit('update-notes-list', { details: details.value });
 };
 </script>
 
@@ -91,6 +111,7 @@ const clearTimeoutIfPossible = () => {
 
         <QuillEditor
             v-model:content="details.description"
+            ref="quillEdytor"
             class="w-full h-[calc(100vh-220px)] mt-2 border p-2 focus:outline-none"
             content-type="html"
             theme="bubble"
