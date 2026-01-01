@@ -22,7 +22,6 @@ const setFolderAsActive = (id: number) => {
 };
 
 const setNoteAsActive = (id: number) => {
-    console.log('setNoteAsActive', id);
     currentNoteId.value = id;
 }
 

@@ -7,6 +7,8 @@ import { PropType } from 'vue';
 import { Note } from './interfaces/Note';
 import { CirclePlus } from 'lucide-vue-next';
 import { getNotesList, createNote } from '@/routes';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 const props = defineProps({
     currentFolderId: {
@@ -39,7 +41,7 @@ const loadNotesList = (withoutSetActive: boolean = false) => {
             if (withoutSetActive) {
                 return;
             }
-            
+
             emit('setAsActive', response.data.list[0].id ?? null);
         })
         .catch(() => {
@@ -61,6 +63,7 @@ const createNewNote = async () => {
         .then((response) => {
             if (response.data.success) {
                 loadNotesList();
+                toastAddedNote();
             }
         });
 };
@@ -72,6 +75,13 @@ const emit = defineEmits<{
 const setAsActive = (id: number) => {
     emit('setAsActive', id);
 };
+
+const toastAddedNote = () => {
+  toast.success('New note added', {
+    position: toast.POSITION.TOP_RIGHT,
+    autoClose: 2000,
+  })
+}
 
 defineExpose({
   loadNotesList,
