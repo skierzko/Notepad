@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SaveFolderRequest;
+use App\Http\Requests\SaveNoteRequest;
 use App\Models\NotepadNote;
 use App\Models\NotepadFolder;
 use Illuminate\Http\JsonResponse;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class NotepadController extends Controller
 {
@@ -77,7 +79,7 @@ class NotepadController extends Controller
         ]);
     }
 
-    public function saveNote(Request $request, NotepadFolder $notepadFolder, ?NotepadNote $notepadNote): JsonResponse
+    public function saveNote(SaveNoteRequest $request, NotepadFolder $notepadFolder, ?NotepadNote $notepadNote): JsonResponse
     {
         $notepadNote->title = $request->input('title', $notepadNote->title);
         $notepadNote->description = $request->input('description', $notepadNote->description);
