@@ -7,6 +7,8 @@ import { getNote, saveNote } from '@/routes';
 import { Note } from './interfaces/Note';
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.bubble.css';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 const props = defineProps({
     currentFolderId: {
@@ -71,6 +73,7 @@ const saveNoteDetails = async () => {
             if (response.data.status) {
                 details.value = response.data.note;
                 updateNotesList();
+                toastSavedNote();
             }
         })
         .finally(() => {
@@ -89,6 +92,13 @@ const clearTimeoutIfPossible = () => {
 
 const updateNotesList = () => {
     emit('update-notes-list', { details: details.value });
+};
+
+const toastSavedNote = () => {
+    toast.success('Note saved', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 2000,
+    })
 };
 </script>
 
