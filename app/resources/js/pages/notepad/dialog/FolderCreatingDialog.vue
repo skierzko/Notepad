@@ -18,6 +18,8 @@ import InputError from '@/components/InputError.vue';
 import { CirclePlus } from 'lucide-vue-next';
 import { saveFolder } from '@/routes';
 import { Folder } from '../interfaces/Folder'
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 defineProps({
     onlyIcon: {
@@ -34,6 +36,11 @@ const open = ref(false);
 
 const success = () => {
     document.querySelector('[data-slot="dialog-close"]')?.dispatchEvent(new MouseEvent('click'));
+
+    toast.success('New folder added', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 2000,
+    })
 };
 </script>
 
