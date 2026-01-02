@@ -2,7 +2,7 @@
 import axios from 'axios';
 import dayjs from "dayjs";
 import { ref, PropType, watch } from 'vue';
-import { NotebookPen } from 'lucide-vue-next';
+import { NotebookPen, LockKeyhole, LockKeyholeOpen } from 'lucide-vue-next';
 import { getNote, saveNote } from '@/routes';
 import { Note } from './interfaces/Note';
 import { QuillEditor } from '@vueup/vue-quill'
@@ -31,9 +31,11 @@ const quillEdytor = ref<any>(null);
 const details = ref<Note>({} as Note);
 const saving = ref<boolean>(false);
 const loading = ref<boolean>(false);
-const firstLoadFinished = ref<boolean>(false);
+const allowSaving = ref<boolean>(false);
 
 const loadNoteDetails = async () => {
+    allowSaving.value = false;
+
     if (props.currentFolderId === null || props.currentNoteId === null || loading.value) {
         return;
     }
@@ -48,7 +50,7 @@ const loadNoteDetails = async () => {
         })
         .finally(() => {
             setTimeout(() => { loading.value = false; }, 500);
-            setTimeout(() => { firstLoadFinished.value = true; }, 1600);
+            setTimeout(() => { allowSaving.value = true; }, 5000);
         });
 }
 loadNoteDetails();
@@ -68,11 +70,15 @@ watch(() => details.value.title, () => {
 let timeoutId: ReturnType<typeof setTimeout> | null = null;
 const saveNoteDetails = async () => {
 
+    if (allowSaving.value === false) {
+        return;
+    }
+
     clearTimeoutIfPossible();
     saving.value = false;
 
     timeoutId = setTimeout(async () => {
-        if (saving.value || firstLoadFinished.value === false) {
+        if (saving.value) {
             return;
         }
 
@@ -125,6 +131,10 @@ const updateNotesList = () => {
         </div>
         <hr />
         <div class="flex gap-4 opacity-30 text-sm mt-1">
+            <div>
+                <LockKeyholeOpen v-if="allowSaving" class="inline relative -top-0.5" title="Auto save unlocked" />
+                <LockKeyhole v-else class="inline relative -top-0.5" title="Auto save locked" />
+            </div>
             <div>First modity: {{ formatDate(details.created_at) }}</div>
             <div>Last modify: {{ formatDate(details.updated_at) }}</div>
             <div v-if="saving">Saving...</div>
