@@ -7,7 +7,6 @@ import { getNote, saveNote } from '@/routes';
 import { Note } from './interfaces/Note';
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.bubble.css';
-import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 
 const props = defineProps({
@@ -114,7 +113,7 @@ const clearTimeoutIfPossible = () => {
 };
 
 const updateNotesList = () => {
-    emit('update-notes-list', { details: details.value });
+    emit('update-notes-list', details.value);
 };
 </script>
 
@@ -137,8 +136,8 @@ const updateNotesList = () => {
             </div>
             <div>First modity: {{ formatDate(details.created_at) }}</div>
             <div>Last modify: {{ formatDate(details.updated_at) }}</div>
-            <div v-if="saving">Saving...</div>
-            <div v-if="loading">Loading...</div>
+            <div v-if="saving" class="text-sky-500">Saving...</div>
+            <div v-if="loading" class="text-yellow-500">Loading...</div>
         </div>
 
         <QuillEditor
