@@ -33,7 +33,7 @@ defineProps({
 const open = ref(false);
 
 const success = () => {
-
+    document.querySelector('[data-slot="dialog-close"]')?.dispatchEvent(new MouseEvent('click'));
 };
 </script>
 
