@@ -29,17 +29,27 @@ const emit = defineEmits<{
 
 const quillEdytor = ref<any>(null);
 const details = ref<Note>({} as Note);
+const saving = ref<boolean>(false);
+const loading = ref<boolean>(false);
+const firstLoadFinished = ref<boolean>(false);
 
 const loadNoteDetails = async () => {
-    if (props.currentFolderId === null || props.currentNoteId === null) {
+    if (props.currentFolderId === null || props.currentNoteId === null || loading.value) {
         return;
     }
 
-    await axios.get(getNote({ notepadFolder: props.currentFolderId, notepadNote: props.currentNoteId }).url)
+    loading.value = true;
+
+    await axios
+        .get(getNote({ notepadFolder: props.currentFolderId, notepadNote: props.currentNoteId }).url)
         .then((response) => {
             details.value = response.data.note;
             quillEdytor.value.setContents(response.data.note.description);
         })
+        .finally(() => {
+            setTimeout(() => { loading.value = false; }, 500);
+            setTimeout(() => { firstLoadFinished.value = true; }, 1600);
+        });
 }
 loadNoteDetails();
 
@@ -59,8 +69,15 @@ let timeoutId: ReturnType<typeof setTimeout> | null = null;
 const saveNoteDetails = async () => {
 
     clearTimeoutIfPossible();
+    saving.value = false;
 
     timeoutId = setTimeout(async () => {
+        if (saving.value || firstLoadFinished.value === false) {
+            return;
+        }
+
+        saving.value = true;
+
         if (props.currentFolderId === null || props.currentNoteId === null) {
             return;
         }
@@ -73,11 +90,11 @@ const saveNoteDetails = async () => {
             if (response.data.status) {
                 details.value = response.data.note;
                 updateNotesList();
-                toastSavedNote();
             }
         })
         .finally(() => {
             timeoutId = null;
+            setTimeout(() => { saving.value = false; }, 500);
         });
     }, 1500);
 };
@@ -92,13 +109,6 @@ const clearTimeoutIfPossible = () => {
 
 const updateNotesList = () => {
     emit('update-notes-list', { details: details.value });
-};
-
-const toastSavedNote = () => {
-    toast.success('Note saved', {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 2000,
-    })
 };
 </script>
 
@@ -117,6 +127,8 @@ const toastSavedNote = () => {
         <div class="flex gap-4 opacity-30 text-sm mt-1">
             <div>First modity: {{ formatDate(details.created_at) }}</div>
             <div>Last modify: {{ formatDate(details.updated_at) }}</div>
+            <div v-if="saving">Saving...</div>
+            <div v-if="loading">Loading...</div>
         </div>
 
         <QuillEditor
