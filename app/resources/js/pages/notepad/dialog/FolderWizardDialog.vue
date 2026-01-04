@@ -21,7 +21,7 @@ import { Folder } from '../interfaces/Folder'
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 
-defineProps({
+const props = defineProps({
     onlyIcon: {
         type: Boolean,
         default: false,
@@ -29,6 +29,10 @@ defineProps({
     data: {
         type: Object as PropType<Folder>,
         required: false
+    },
+    showDialogTrigger: {
+        type: Boolean,
+        default: true,
     }
 });
 
@@ -37,20 +41,28 @@ const open = ref(false);
 const success = () => {
     document.querySelector('[data-slot="dialog-close"]')?.dispatchEvent(new MouseEvent('click'));
 
-    toast.success('New folder added', {
+    toast.success(props.data ? 'Folder renamed' : 'New folder added', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
     })
 };
+
+const openDialog = () => {
+    open.value = true;
+};
+
+defineExpose({
+    openDialog,
+});
 </script>
 
 <template>
     <Dialog v-model:open="open">
-        <DialogTrigger as-child>
+        <DialogTrigger v-if="showDialogTrigger" as-child>
             <CirclePlus v-if="onlyIcon" class="inline cursor-pointer" />
             <div v-else class="flex gap-2 items-center justify-center p-2 my-2 bg-gray-200/80 cursor-pointer hover:bg-gray-100">
                 <CirclePlus class="inline" />
-                <div>Create first folder</div>
+                <div>{{ data ? 'Rename folder' : 'Create first folder' }}</div>
             </div>
         </DialogTrigger>
         <DialogContent>
@@ -62,10 +74,9 @@ const success = () => {
             >
                 <DialogHeader class="space-y-3">
                     <DialogTitle>
-                        Creating a new folder
+                        {{ data ? 'Rename folder: ' + data.title : 'Creating a new folder' }}
                     </DialogTitle>
                     <DialogDescription>
-                        
                             <Label for="folder-name">Folder name</Label>
                             <Input
                                 id="folder-name"
@@ -74,8 +85,11 @@ const success = () => {
                                 required
                                 autocomplete="folder-name"
                                 placeholder="Full folder name"
+                                :default-value="data ? data.title : ''"
                             />
                             <InputError class="mt-2" :message="errors.name" />
+
+                            <Input type="hidden" name="id" :default-value="data ? data.id : ''" />
                     
                     </DialogDescription>
                 </DialogHeader>
@@ -84,7 +98,9 @@ const success = () => {
                         <Button variant="secondary" class="cursor-pointer">Close</Button>
                     </DialogClose>
                     
-                    <Button type="submit" variant="primary" class="cursor-pointer" :disabled="processing">Create</Button>
+                    <Button type="submit" variant="primary" class="cursor-pointer" :disabled="processing">
+                        {{ data ? 'Rename' : 'Create' }}
+                    </Button>
                 </DialogFooter>
             </Form>
         </DialogContent>

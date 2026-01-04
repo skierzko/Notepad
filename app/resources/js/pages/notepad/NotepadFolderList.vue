@@ -2,7 +2,7 @@
 import { PropType, ref } from 'vue';
 import NotepadFolderRow from './NotepadFolderRow.vue';
 import { Folder } from 'lucide-vue-next';
-import FolderCreatingDialog from './dialog/FolderCreatingDialog.vue';
+import FolderWizardDialog from './dialog/FolderWizardDialog.vue';
 import { Folder as FolderInterface } from './interfaces/Folder';
 
 const props = defineProps({
@@ -33,11 +33,11 @@ const setAsActive = (id: number) => {
                 <Folder class="inline relative -top-0.5" />
                 Folders
             </div>
-            <FolderCreatingDialog :only-icon="true" />
+            <FolderWizardDialog :only-icon="true" />
         </div>
         <hr />
 
-        <FolderCreatingDialog v-if="list.length === 0" />
+        <FolderWizardDialog v-if="list.length === 0" />
         <NotepadFolderRow
             v-for="folder in list"
             :data="folder"

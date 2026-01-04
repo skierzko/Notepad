@@ -29,7 +29,7 @@ class NotepadController extends Controller
         $userId = Auth::user()->id;
         /** @var NotepadFolder $notepadFolder */
         $notepadFolder = $request->has('id')
-        ? NotepadFolder::query()->where('id', '=', $request->has('id'))->where('user_id', '=', $userId)->first()
+        ? NotepadFolder::query()->where('id', '=', $request->get('id'))->where('user_id', '=', $userId)->first()
         : new NotepadFolder();
 
         $notepadFolder->user_id = $userId;

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { CircleEllipsis } from 'lucide-vue-next';
 import { Folder } from './interfaces/Folder';
-import { PropType } from 'vue';
+import { ref, PropType } from 'vue';
 import dayjs from "dayjs";
+import FolderMenuContent from './menus/FolderMenuContent.vue';
+import FolderWizardDialog from './dialog/FolderWizardDialog.vue';
 
 const props = defineProps({
   data: {
@@ -15,8 +16,10 @@ const props = defineProps({
   }
 })
 
+const folderWizardDialog = ref<InstanceType<typeof FolderWizardDialog> | null>(null);
+
 const emit = defineEmits<{
-  (e: 'setAsActive', id: number): void
+  (e: 'setAsActive', id: number): void;
 }>()
 
 const formatDate = (date: string) => {
@@ -25,6 +28,14 @@ const formatDate = (date: string) => {
 
 const setAsActive = () => {
     emit('setAsActive', props.data.id);
+};
+
+const renameFolder = () => {
+  console.log('renameFolder');
+  folderWizardDialog.value?.openDialog();
+};
+
+const removeFolder = () => {
 };
 </script>
 
@@ -38,6 +49,17 @@ const setAsActive = () => {
             <div class="text-nowrap text-ellipsis">{{ data.title }}</div>
             <div class="text-sm">{{ formatDate(data.updated_at) }}</div>
         </div>
-        <CircleEllipsis class="opacity-30 hover:opacity-80" />
-    </div>  
+        <div @click.stop>
+          <FolderMenuContent
+            :data="data"
+            @renameFolder="renameFolder"
+            @removeFolder="removeFolder"
+            />
+        </div>
+    </div>
+    <FolderWizardDialog
+      ref="folderWizardDialog"
+      :showDialogTrigger="false"
+      :data="data"
+      />
 </template>
