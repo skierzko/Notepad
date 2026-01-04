@@ -135,4 +135,21 @@ class NotepadController extends Controller
             ]);
         }
     }
+
+    public function deleteNote(NotepadFolder $notepadFolder, NotepadNote $notepadNote): JsonResponse
+    {
+        if ($notepadNote->notepad_folder_id !== $notepadFolder->id) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Note not found in the specified folder'
+            ]);
+        }
+
+        $isDeleted = $notepadNote->delete();
+
+        return response()->json([
+            'status' => $isDeleted,
+            'message' => $isDeleted ? 'Note deleted successfully' : 'Failed to delete note'
+        ]);
+    }
 }

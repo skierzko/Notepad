@@ -27,7 +27,6 @@ const setAsActive = (id: number) => {
 };
 
 const updateFoldersList = () => {
-    console.log('Updating folders list');
     emit('updateFoldersList');
 };
 </script>

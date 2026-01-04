@@ -23,7 +23,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits<{
-    (e: 'update-notes-list', details: Note): void,
+    (e: 'updateNotesList', details: Note): void,
 }>()
 
 const quillEdytor = ref<any>(null);
@@ -129,7 +129,7 @@ const updateNotesList = () => {
              </div>
         </div>
         <hr />
-        <div class="flex gap-4 opacity-30 text-sm mt-1">
+        <div class="flex gap-4 opacity-40 text-sm mt-1 items-center">
             <div>
                 <LockKeyholeOpen v-if="allowSaving" class="inline relative -top-0.5" title="Auto save unlocked" />
                 <LockKeyhole v-else class="inline relative -top-0.5" title="Auto save locked" />

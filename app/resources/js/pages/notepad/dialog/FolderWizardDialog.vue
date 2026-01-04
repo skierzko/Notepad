@@ -48,9 +48,8 @@ const success = () => {
     toast.success(props.data ? 'Folder renamed' : 'New folder added', {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
-    })
+    });
 
-    console.log('Emitting updateFoldersList');
     emit('updateFoldersList');
 };
 

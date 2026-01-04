@@ -20,6 +20,7 @@ Route::prefix('/notepad')->middleware(['auth', 'verified'])->group(function() {
     Route::get('folder/{notepadFolder}/{notepadNote?}', [NotepadController::class, 'getNote'])->name('get-note');
     Route::post('folder/{notepadFolder}/create-note', [NotepadController::class, 'createNote'])->name('create-note');
     Route::post('folder/{notepadFolder}/{notepadNote?}', [NotepadController::class, 'saveNote'])->name('save-note');
+    Route::delete('folder/{notepadFolder}/{notepadNote}', [NotepadController::class, 'deleteNote'])->name('delete-note');
 });
 
 require __DIR__.'/settings.php';

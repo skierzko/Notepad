@@ -106,6 +106,7 @@ defineExpose({
             :data="note"
             :is-active="note.id === props.currentNoteId"
             @set-as-active="setAsActive"
+            @update-notes-list="loadNotesList"
             />
 
         <div v-if="foldersCount === 0" class="p-2 text-center">

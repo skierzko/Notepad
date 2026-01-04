@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { CircleEllipsis } from 'lucide-vue-next';
 import dayjs from "dayjs";
 import { PropType } from 'vue';
 import { Note } from './interfaces/Note';
+import NotesMenuContent from './menus/NotesMenuContent.vue';
+import { deleteNote } from '@/routes';
+import axios from "axios";
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 const props = defineProps({
   data: {
@@ -16,15 +20,30 @@ const props = defineProps({
 });
 
 const emit = defineEmits<{
-  (e: 'setAsActive', id: number): void
+  (e: 'setAsActive', id: number): void;
+  (e: 'updateNotesList'): void;
 }>()
 
 const formatDate = (date: string) => {
-    return dayjs(date).format("DD.MM.YYYY");
+  return dayjs(date).format("DD.MM.YYYY");
 };
 
 const setAsActive = () => {
-    emit('setAsActive', props.data.id);
+  emit('setAsActive', props.data.id);
+};
+
+const removeNoteFetch = async (id: number) => {
+  await axios.delete(deleteNote({ notepadFolder: props.data.notepad_folder_id, notepadNote: id }).url)
+    .then((res) => {
+      if (res.data.status) {
+        toast.success('Note deleted successfully', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 1000,
+        });
+
+        emit('updateNotesList');
+      }
+    });
 };
 </script>
 
@@ -38,6 +57,8 @@ const setAsActive = () => {
             <div class="text-nowrap text-ellipsis">{{ data.title }}</div>
             <div class="text-sm">{{ formatDate(data.updated_at) }}</div>
         </div>
-        <CircleEllipsis class="opacity-30 hover:opacity-80" />
+        <div @click.stop>
+          <NotesMenuContent :data="data" @removeNote="removeNoteFetch" />
+        </div>
     </div>  
 </template>

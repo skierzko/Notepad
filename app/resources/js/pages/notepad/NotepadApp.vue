@@ -12,12 +12,11 @@ const foldersList = ref<Folder[]>([]);
 const loadingFolders = ref<boolean>(false);
 
 const notesList = ref<InstanceType<typeof NotepadNotesList> | null>(null);
+
 const currentFolderId = ref<number|null>(foldersList.value[0]?.id ?? null);
 const currentNoteId = ref<number|null>(null);
 
 const getFoldersList = async () => {
-    console.log('Fetching folders list');
-
     if (loadingFolders.value) {
         return;
     }
@@ -27,6 +26,8 @@ const getFoldersList = async () => {
     await axios.post(getFolders().url)
         .then((response) => {
             foldersList.value = response.data.folders;
+            currentFolderId.value = currentFolderId.value ?? foldersList.value[0]?.id ?? null;
+            currentNoteId.value = currentFolderId.value ?? notesList
         })
         .finally(() => {
             loadingFolders.value = false;
