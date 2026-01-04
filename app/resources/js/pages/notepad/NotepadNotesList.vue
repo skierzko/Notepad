@@ -117,6 +117,5 @@ defineExpose({
             <p>Add your first note by clicking above.</p>
             <p></p>
         </div>
-        
     </div>
 </template>

@@ -11,7 +11,7 @@ import axios from 'axios';
 const foldersList = ref<Folder[]>([]);
 const loadingFolders = ref<boolean>(false);
 
-const notesList = ref<InstanceType<typeof NotepadNotesList> | null>(null);
+const notepadNotesListRef = ref<InstanceType<typeof NotepadNotesList> | null>(null);
 
 const currentFolderId = ref<number|null>(foldersList.value[0]?.id ?? null);
 const currentNoteId = ref<number|null>(null);
@@ -26,8 +26,8 @@ const getFoldersList = async () => {
     await axios.post(getFolders().url)
         .then((response) => {
             foldersList.value = response.data.folders;
+
             currentFolderId.value = currentFolderId.value ?? foldersList.value[0]?.id ?? null;
-            currentNoteId.value = currentFolderId.value ?? notesList
         })
         .finally(() => {
             loadingFolders.value = false;
@@ -48,13 +48,14 @@ const updateFoldersList = () => {
 };
 
 const updateNotesList = (details: Note) => {
-    notesList.value?.loadNotesList(true);
+    notepadNotesListRef.value?.loadNotesList(true);
 };
 
 </script>
 
 <template>
     <div class="flex gap-4 h-[calc(100vh-130px)]">
+        {{ currentFolderId }} {{ currentNoteId }}
         <NotepadFolderList
             :list="foldersList"
             :current-folder-id="currentFolderId"
@@ -62,7 +63,7 @@ const updateNotesList = (details: Note) => {
             @update-folders-list="updateFoldersList"
             />
         <NotepadNotesList
-            ref="notesList"
+            ref="notepadNotesListRef"
             :current-folder-id="currentFolderId"
             :current-note-id="currentNoteId"
             :folders-count="foldersList.length"

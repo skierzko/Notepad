@@ -35,7 +35,7 @@ const allowSaving = ref<boolean>(false);
 const loadNoteDetails = async () => {
     allowSaving.value = false;
 
-    if (props.currentFolderId === null || props.currentNoteId === null || loading.value) {
+    if (props.currentFolderId === null || props.currentNoteId === null ) {
         return;
     }
 
@@ -113,7 +113,7 @@ const clearTimeoutIfPossible = () => {
 };
 
 const updateNotesList = () => {
-    emit('update-notes-list', details.value);
+    emit('updateNotesList', details.value);
 };
 </script>
 
