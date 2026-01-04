@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PropType } from 'vue';
+import { ref, PropType } from 'vue';
 import { Folder } from '../interfaces/Folder';
 import { CircleEllipsis } from 'lucide-vue-next';
 import { Trash2, FolderPen } from 'lucide-vue-next';
@@ -19,6 +19,15 @@ const props = defineProps({
     required: true,
   },
 });
+
+const showDeleteConfirmation = ref<boolean>(false);
+const deleteConfirmation = () => {
+    showDeleteConfirmation.value = !showDeleteConfirmation.value;
+
+    setTimeout(() => {
+        showDeleteConfirmation.value = false;
+    }, 5000);
+};
 
 const emit = defineEmits<{
     (e: 'renameFolder', id: number): void;
@@ -65,12 +74,31 @@ const removeFolder = () => {
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem :as-child="true" @click="removeFolder">
-                    <div class="block w-full cursor-pointer hover:bg-red-500">
-                        <Trash2 class="mr-2 h-4 w-4" />
-                        Remove permanently
+                <div
+                    class="flex lock w-full cursor-pointer hover:bg-red-500 px-2 py-1.5 gap-2 text-sm select-none [&_svg:not([class*='text-'])]:text-muted-foreground"
+                    @click.stop="deleteConfirmation"
+                >
+                    <Trash2 class="mr-2 h-4 w-4" />
+                    Remove permanently
+                </div>
+
+                <div v-if="showDeleteConfirmation" class="p-4">
+                    <div class="text-sm">Are you sure to delete this folder?</div>
+                    <div class="flex mt-2">
+                        <div
+                            class="flex-1 text-center bg-red-800 text-sm cursor-pointer hover:bg-red-700 active:bg-red-900"
+                            @click="showDeleteConfirmation = false"
+                        >
+                            No
+                        </div>
+                        <div
+                            class="flex-1 text-center bg-green-800 text-sm cursor-pointer hover:bg-green-700 active:bg-green-900"
+                            @click="removeFolder"
+                        >
+                        Yes
+                        </div>
                     </div>
-                </DropdownMenuItem>
+                </div>
             </DropdownMenuGroup>
 
         </DropdownMenuContent>

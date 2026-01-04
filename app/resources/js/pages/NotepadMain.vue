@@ -1,25 +1,16 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { dashboard } from '@/routes';
+import { notepad } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import NotepadApp from './notepad/NotepadApp.vue';
-import { PropType } from 'vue';
-import { Folder } from './notepad/interfaces/Folder';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'My Notepad',
-        href: dashboard().url,
+        href: notepad().url,
     },
 ];
-
-defineProps({
-    foldersList: {
-        type: Array as PropType<Folder[]>,
-        required: true,
-    },
-});
 </script>
 
 <template>
@@ -27,7 +18,7 @@ defineProps({
 
     <AppLayout :breadcrumbs="breadcrumbs">
        <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-            <NotepadApp :folders-list="foldersList" />
+            <NotepadApp />
        </div>
     </AppLayout>
 </template>

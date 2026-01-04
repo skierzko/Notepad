@@ -2,20 +2,37 @@
 import NotepadFolderList from './NotepadFolderList.vue';
 import NotepadNotesList from './NotepadNotesList.vue';
 import NotepadNotesDetails from './NotepadNotesDetails.vue';
-import { PropType, ref } from 'vue';
+import { ref } from 'vue';
 import { Folder } from './interfaces/Folder';
 import { Note } from './interfaces/Note';
+import { getFolders } from '@/routes';
+import axios from 'axios';
 
-const props = defineProps({
-    foldersList: {
-        type: Array as PropType<Folder[]>,
-        required: true,
-    },
-});
+const foldersList = ref<Folder[]>([]);
+const loadingFolders = ref<boolean>(false);
 
 const notesList = ref<InstanceType<typeof NotepadNotesList> | null>(null);
-const currentFolderId = ref<number|null>(props.foldersList?.[0]?.id ?? null);
+const currentFolderId = ref<number|null>(foldersList.value[0]?.id ?? null);
 const currentNoteId = ref<number|null>(null);
+
+const getFoldersList = async () => {
+    console.log('Fetching folders list');
+
+    if (loadingFolders.value) {
+        return;
+    }
+
+    loadingFolders.value = true;    
+
+    await axios.post(getFolders().url)
+        .then((response) => {
+            foldersList.value = response.data.folders;
+        })
+        .finally(() => {
+            loadingFolders.value = false;
+        });
+};
+getFoldersList();
 
 const setFolderAsActive = (id: number) => {
     currentFolderId.value = id;
@@ -24,6 +41,10 @@ const setFolderAsActive = (id: number) => {
 const setNoteAsActive = (id: number) => {
     currentNoteId.value = id;
 }
+
+const updateFoldersList = () => {
+    getFoldersList();
+};
 
 const updateNotesList = (details: Note) => {
     notesList.value?.loadNotesList(true);
@@ -37,12 +58,13 @@ const updateNotesList = (details: Note) => {
             :list="foldersList"
             :current-folder-id="currentFolderId"
             @set-as-active="setFolderAsActive"
+            @update-folders-list="updateFoldersList"
             />
         <NotepadNotesList
             ref="notesList"
             :current-folder-id="currentFolderId"
             :current-note-id="currentNoteId"
-            :folders-count="props.foldersList.length"
+            :folders-count="foldersList.length"
             @set-as-active="setNoteAsActive"
             />
         <NotepadNotesDetails

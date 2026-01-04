@@ -12,7 +12,9 @@ Route::get('dashboard', [DashboardController::class, 'index'])->middleware(['aut
 Route::prefix('/notepad')->middleware(['auth', 'verified'])->group(function() {
     Route::get('', [NotepadController::class, 'index'])->name('notepad');
 
+    Route::post('folders', [NotepadController::class, 'getFolders'])->name('get-folders');
     Route::post('folder', [NotepadController::class, 'saveFolder'])->name('save-folder');
+    Route::delete('folder', [NotepadController::class, 'deleteFolder'])->name('delete-folder');
 
     Route::get('folder/{notepadFolder}/notes-list', [NotepadController::class, 'getNotesListByFolderId'])->name('get-notes-list');
     Route::get('folder/{notepadFolder}/{notepadNote?}', [NotepadController::class, 'getNote'])->name('get-note');

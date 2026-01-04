@@ -90,9 +90,6 @@ defineExpose({
 
 <template>
     <div class="min-w-[200px] border border-gray-200 p-2">
-        <div class="font-bold">
-            
-        </div>
         <div class="flex font-bold">
             <div class="flex-1">
                 <Notebook class="inline relative -top-0.5" />

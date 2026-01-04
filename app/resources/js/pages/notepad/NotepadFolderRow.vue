@@ -4,6 +4,10 @@ import { ref, PropType } from 'vue';
 import dayjs from "dayjs";
 import FolderMenuContent from './menus/FolderMenuContent.vue';
 import FolderWizardDialog from './dialog/FolderWizardDialog.vue';
+import axios from 'axios';
+import { deleteFolder } from '@/routes';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 const props = defineProps({
   data: {
@@ -20,6 +24,7 @@ const folderWizardDialog = ref<InstanceType<typeof FolderWizardDialog> | null>(n
 
 const emit = defineEmits<{
   (e: 'setAsActive', id: number): void;
+  (e: 'updateFoldersList'): void;
 }>()
 
 const formatDate = (date: string) => {
@@ -31,11 +36,25 @@ const setAsActive = () => {
 };
 
 const renameFolder = () => {
-  console.log('renameFolder');
   folderWizardDialog.value?.openDialog();
 };
 
-const removeFolder = () => {
+const removeFolderFetch = async (id: number) => {
+  await axios.delete(deleteFolder().url, { data: { id } })
+    .then((res) => {
+      if (res.data.status) {
+        toast.success('Folder deleted successfully', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 1000,
+        });
+
+        updateFoldersList();
+      }
+    });
+};
+
+const updateFoldersList = () => {
+    emit('updateFoldersList');
 };
 </script>
 
@@ -53,7 +72,7 @@ const removeFolder = () => {
           <FolderMenuContent
             :data="data"
             @renameFolder="renameFolder"
-            @removeFolder="removeFolder"
+            @removeFolder="removeFolderFetch"
             />
         </div>
     </div>
@@ -61,5 +80,6 @@ const removeFolder = () => {
       ref="folderWizardDialog"
       :showDialogTrigger="false"
       :data="data"
-      />
+      @update-folders-list="updateFoldersList"
+    />
 </template>

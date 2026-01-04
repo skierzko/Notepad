@@ -36,6 +36,10 @@ const props = defineProps({
     }
 });
 
+const emit = defineEmits<{
+  (e: 'updateFoldersList'): void;
+}>()
+
 const open = ref(false);
 
 const success = () => {
@@ -45,6 +49,9 @@ const success = () => {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 2000,
     })
+
+    console.log('Emitting updateFoldersList');
+    emit('updateFoldersList');
 };
 
 const openDialog = () => {

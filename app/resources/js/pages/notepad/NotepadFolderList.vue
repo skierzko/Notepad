@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PropType, ref } from 'vue';
+import { PropType } from 'vue';
 import NotepadFolderRow from './NotepadFolderRow.vue';
 import { Folder } from 'lucide-vue-next';
 import FolderWizardDialog from './dialog/FolderWizardDialog.vue';
@@ -11,18 +11,24 @@ const props = defineProps({
         required: true,
     },
     currentFolderId: {
-        type: Number as PropType<number|null>,
+        type: [Number, null] as PropType<number|null>,
         default: null,
         required: true,
     }
 });
 
 const emit = defineEmits<{
-  (e: 'setAsActive', id: number): void
+  (e: 'setAsActive', id: number): void;
+  (e: 'updateFoldersList'): void;
 }>()
 
 const setAsActive = (id: number) => {
     emit('setAsActive', id);
+};
+
+const updateFoldersList = () => {
+    console.log('Updating folders list');
+    emit('updateFoldersList');
 };
 </script>
 
@@ -33,17 +39,25 @@ const setAsActive = (id: number) => {
                 <Folder class="inline relative -top-0.5" />
                 Folders
             </div>
-            <FolderWizardDialog :only-icon="true" />
+            <FolderWizardDialog
+                :only-icon="true"
+                @update-folders-list="updateFoldersList"
+            />
         </div>
         <hr />
 
-        <FolderWizardDialog v-if="list.length === 0" />
+        <FolderWizardDialog
+            v-if="list.length === 0"
+            @update-folders-list="updateFoldersList"
+        />
+
         <NotepadFolderRow
             v-for="folder in list"
             :data="folder"
             :key="folder.id"
             :is-active="folder.id === currentFolderId"
             @set-as-active="setAsActive"
+            @update-folders-list="updateFoldersList"
         />
     </div>
 </template>
