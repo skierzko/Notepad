@@ -24,7 +24,10 @@ class NotepadController extends Controller
     public function getFolders(): JsonResponse
     {
         $userId = Auth::user()->id;
-        $folders = NotepadFolder::query()->where('user_id', '=', $userId)->get();
+        $folders = NotepadFolder::query()
+            ->withCount(['notepad'])
+            ->where('user_id', '=', $userId)
+            ->get();
 
         return response()->json([
             'status' => true,

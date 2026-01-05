@@ -55,7 +55,6 @@ const updateNotesList = (details: Note) => {
 
 <template>
     <div class="flex gap-4 h-[calc(100vh-130px)]">
-        {{ currentFolderId }} {{ currentNoteId }}
         <NotepadFolderList
             :list="foldersList"
             :current-folder-id="currentFolderId"
