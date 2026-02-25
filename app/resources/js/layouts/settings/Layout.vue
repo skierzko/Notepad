@@ -11,18 +11,19 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
 
 const sidebarNavItems: NavItem[] = [
-    {
-        title: 'Profile',
-        href: editProfile(),
-    },
-    {
-        title: 'Password',
-        href: editPassword(),
-    },
-    {
-        title: 'Two-Factor Auth',
-        href: show(),
-    },
+    // Hidden for testing. Will be added back in the future when the related features are implemented.
+    // {
+    //     title: 'Profile',
+    //     href: editProfile(),
+    // },
+    // {
+    //     title: 'Password',
+    //     href: editPassword(),
+    // },
+    // {
+    //     title: 'Two-Factor Auth',
+    //     href: show(),
+    // },
     {
         title: 'Appearance',
         href: editAppearance(),
