@@ -12,7 +12,7 @@ export const edit = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 edit.definition = {
     methods: ["get","head"],
     // Hange to "profile"
-    url: '/settings/apperrance',
+    url: '/settings/appearance',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
