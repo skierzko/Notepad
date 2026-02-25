@@ -41,7 +41,7 @@ const demoMode = ref(true);
             {{ status }}
         </div>
 
-        <div v-if="demoMode" class="mb-4 text-sm font-medium text-blue-600">
+        <div v-if="demoMode" class="mb-4 text-sm font-medium text-sky-600">
             A demo mode is available, and you can log in using the credentials provided below. 
 
             <div class="grid grid-cols-[80px_1fr] mt-4">
