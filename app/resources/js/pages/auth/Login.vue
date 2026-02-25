@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
@@ -17,6 +18,14 @@ defineProps<{
     canResetPassword: boolean;
     canRegister: boolean;
 }>();
+
+const form = ref({
+    email: '',
+    password: '',
+    remember: false,
+});
+
+const demoMode = ref(true);
 </script>
 
 <template>
@@ -32,6 +41,17 @@ defineProps<{
             {{ status }}
         </div>
 
+        <div v-if="demoMode" class="mb-4 text-sm font-medium text-blue-600">
+            A demo mode is available, and you can log in using the credentials provided below. 
+
+            <div class="grid grid-cols-[80px_1fr] mt-4">
+                <p class="font-bold">Email:</p>
+                <p class="cursor-pointer" @click="() => form.email = 'admin@localhost.test'">admin@localhost.test</p>
+                <p class="font-bold">Password:</p>
+                <p class="cursor-pointer" @click="() => form.password = 'password_admin'">password_admin</p>
+            </div>
+        </div>
+
         <Form
             v-bind="store.form()"
             :reset-on-success="['password']"
@@ -42,6 +62,7 @@ defineProps<{
                 <div class="grid gap-2">
                     <Label for="email">Email address</Label>
                     <Input
+                        v-model="form.email"
                         id="email"
                         type="email"
                         name="email"
@@ -67,6 +88,7 @@ defineProps<{
                         </TextLink>
                     </div>
                     <Input
+                        v-model="form.password"
                         id="password"
                         type="password"
                         name="password"
@@ -80,7 +102,7 @@ defineProps<{
 
                 <div class="flex items-center justify-between">
                     <Label for="remember" class="flex items-center space-x-3">
-                        <Checkbox id="remember" name="remember" :tabindex="3" />
+                        <Checkbox v-model="form.remember" id="remember" name="remember" :tabindex="3" />
                         <span>Remember me</span>
                     </Label>
                 </div>
@@ -95,6 +117,10 @@ defineProps<{
                     <Spinner v-if="processing" />
                     Log in
                 </Button>
+            </div>
+
+            <div v-if="demoMode" class="mb-4 text-center text-sm font-medium text-red-800">
+                The database is refreshed every <b>30 minutes</b>, and all entered data will be permanently lost.
             </div>
 
             <div

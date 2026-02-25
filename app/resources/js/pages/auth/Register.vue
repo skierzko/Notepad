@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,8 @@ import AuthBase from '@/layouts/AuthLayout.vue';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
 import { Form, Head } from '@inertiajs/vue3';
+
+const demoMode = ref(true);
 </script>
 
 <template>
@@ -17,6 +20,10 @@ import { Form, Head } from '@inertiajs/vue3';
         description="Enter your details below to create your account"
     >
         <Head title="Register" />
+
+        <div v-if="demoMode" class="mb-4 text-sm font-medium text-red-800">
+            Registration is temporarily disabled for testing purposes. 
+        </div>
 
         <Form
             v-bind="store.form()"
@@ -33,6 +40,7 @@ import { Form, Head } from '@inertiajs/vue3';
                         required
                         autofocus
                         :tabindex="1"
+                        :disabled="demoMode"
                         autocomplete="name"
                         name="name"
                         placeholder="Full name"
@@ -47,6 +55,7 @@ import { Form, Head } from '@inertiajs/vue3';
                         type="email"
                         required
                         :tabindex="2"
+                        :disabled="demoMode"
                         autocomplete="email"
                         name="email"
                         placeholder="email@example.com"
@@ -61,6 +70,7 @@ import { Form, Head } from '@inertiajs/vue3';
                         type="password"
                         required
                         :tabindex="3"
+                        :disabled="demoMode"
                         autocomplete="new-password"
                         name="password"
                         placeholder="Password"
@@ -75,6 +85,7 @@ import { Form, Head } from '@inertiajs/vue3';
                         type="password"
                         required
                         :tabindex="4"
+                        :disabled="demoMode"
                         autocomplete="new-password"
                         name="password_confirmation"
                         placeholder="Confirm password"
@@ -86,7 +97,7 @@ import { Form, Head } from '@inertiajs/vue3';
                     type="submit"
                     class="mt-2 w-full"
                     tabindex="5"
-                    :disabled="processing"
+                    :disabled="processing || demoMode"
                     data-test="register-user-button"
                 >
                     <Spinner v-if="processing" />

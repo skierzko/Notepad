@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,8 @@ import { Form, Head } from '@inertiajs/vue3';
 defineProps<{
     status?: string;
 }>();
+
+const demoMode = ref(true);
 </script>
 
 <template>
@@ -21,6 +24,10 @@ defineProps<{
         description="Enter your email to receive a password reset link"
     >
         <Head title="Forgot password" />
+
+        <div v-if="demoMode" class="mb-4 text-sm font-medium text-red-800">
+            Forgot password is temporarily disabled for testing purposes. 
+        </div>
 
         <div
             v-if="status"
@@ -40,6 +47,7 @@ defineProps<{
                         autocomplete="off"
                         autofocus
                         placeholder="email@example.com"
+                        :disabled="demoMode"
                     />
                     <InputError :message="errors.email" />
                 </div>
@@ -47,7 +55,7 @@ defineProps<{
                 <div class="my-6 flex items-center justify-start">
                     <Button
                         class="w-full"
-                        :disabled="processing"
+                        :disabled="processing || demoMode"
                         data-test="email-password-reset-link-button"
                     >
                         <Spinner v-if="processing" />
