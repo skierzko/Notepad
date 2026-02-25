@@ -118,7 +118,7 @@ const updateNotesList = () => {
 </script>
 
 <template>
-    <div class="w-full border p-2">
+    <div class="w-full border p-2 overflow-hidden">
         <div class="flex gap-4 font-bold">
             <div>
                 <NotebookPen class="inline relative -top-0.5" />
@@ -140,14 +140,17 @@ const updateNotesList = () => {
             <div v-if="loading" class="text-yellow-500">Loading...</div>
         </div>
 
-        <QuillEditor
-            v-model:content="details.description"
-            ref="quillEdytor"
-            class="w-full h-[calc(100vh-220px)] mt-2 border p-2 focus:outline-none"
-            content-type="html"
-            theme="bubble"
-            :toolbar="[{ size: [ 'small', false, 'large', 'huge' ]}, 'bold', 'italic', 'underline']"
-            @update:content="saveNoteDetails"
-        />
+        <div class="flex mt-2 h-[calc(100vh-230px)]">
+            <QuillEditor
+                        v-model:content="details.description"
+                        ref="quillEdytor"
+                        class="w-full border p-2 focus:outline-none"
+                        content-type="html"
+                        theme="bubble"
+                        :toolbar="[{ size: [ 'small', false, 'large', 'huge' ]}, 'bold', 'italic', 'underline']"
+                        @update:content="saveNoteDetails"
+                    />
+        </div>
+        
     </div>
 </template>

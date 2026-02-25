@@ -53,8 +53,10 @@ const removeNoteFetch = async (id: number) => {
         :class="[isActive && 'active']"
         @click="setAsActive"
     >
-        <div class="flex-1">
-            <div class="text-nowrap text-ellipsis">{{ data.title }}</div>
+        <div class="flex-1 overflow-hidden">
+            <div>
+              <div class="text-nowrap text-ellipsis" :title="data.title">{{ data.title }}</div>
+            </div>
             <div class="text-sm">{{ formatDate(data.updated_at) }}</div>
         </div>
         <div @click.stop>
