@@ -2,6 +2,14 @@
 
 **Notepad** is a web application built with **Laravel**, **Inertia.js**, **Vue 3**, and **TypeScript**. It provides a clean and intuitive interface for managing notes organized into folders, with a strong focus on usability and simplicity.
 
+## 🚀 Live Demo
+
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://notepad.kierzkowski.net)
+
+## 🌐 Portfolio
+
+[![Portfolio](https://img.shields.io/badge/Visit-My_Portfolio-111?style=for-the-badge&logo=github&logoColor=white)](https://kierzkowski.net)
+
 ## Features
 
 - **User Authentication**  
