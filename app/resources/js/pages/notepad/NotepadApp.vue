@@ -7,6 +7,7 @@ import { Folder } from './interfaces/Folder';
 import { Note } from './interfaces/Note';
 import { getFolders } from '@/routes';
 import axios from 'axios';
+import { useSidebar } from '@/components/ui/sidebar/utils';
 
 const foldersList = ref<Folder[]>([]);
 const loadingFolders = ref<boolean>(false);
@@ -15,6 +16,8 @@ const notepadNotesListRef = ref<InstanceType<typeof NotepadNotesList> | null>(nu
 
 const currentFolderId = ref<number|null>(foldersList.value[0]?.id ?? null);
 const currentNoteId = ref<number|null>(null);
+
+const { isMobile } = useSidebar()
 
 const getFoldersList = async () => {
     if (loadingFolders.value) {
@@ -54,21 +57,38 @@ const updateNotesList = (details: Note) => {
 </script>
 
 <template>
-    <div class="flex gap-4 h-[calc(100vh-130px)]">
-        <NotepadFolderList
-            :list="foldersList"
-            :current-folder-id="currentFolderId"
-            @set-as-active="setFolderAsActive"
-            @update-folders-list="updateFoldersList"
-            />
-        <NotepadNotesList
-            ref="notepadNotesListRef"
-            :current-folder-id="currentFolderId"
-            :current-note-id="currentNoteId"
-            :folders-count="foldersList.length"
-            @set-as-active="setNoteAsActive"
-            />
+    <div
+        :class="[
+            isMobile && 'grid gap-2',
+            isMobile === false && 'flex gap-4 h-[calc(100vh-130px)]'
+        ]"
+    >
+        <div
+            class="flex gap-2 h-full"
+            :class="[
+                isMobile && 'overflow-hidden max-h-[150px]',
+                isMobile === false && ''
+            ]"
+        >
+            <NotepadFolderList
+                class="flex-1"
+                :list="foldersList"
+                :current-folder-id="currentFolderId"
+                @set-as-active="setFolderAsActive"
+                @update-folders-list="updateFoldersList"
+                />
+            <NotepadNotesList
+                class="flex-1"
+                ref="notepadNotesListRef"
+                :current-folder-id="currentFolderId"
+                :current-note-id="currentNoteId"
+                :folders-count="foldersList.length"
+                @set-as-active="setNoteAsActive"
+                />
+        </div>
+        
         <NotepadNotesDetails
+            class=""
             :current-folder-id="currentFolderId"
             :current-note-id="currentNoteId"
             @update-notes-list="updateNotesList"

@@ -9,6 +9,7 @@ import { CirclePlus } from 'lucide-vue-next';
 import { getNotesList, createNote } from '@/routes';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import { useSidebar } from '@/components/ui/sidebar/utils';
 
 const props = defineProps({
     currentFolderId: {
@@ -28,6 +29,8 @@ const props = defineProps({
 });
 
 const list = ref<Note[]>([]);
+const { isMobile } = useSidebar()
+const iconSize = ref<number>(isMobile.value ? 17 : 20);
 
 const loadNotesList = (withoutSetActive: boolean = false) => {
     if (props.currentFolderId === null) {
@@ -89,10 +92,10 @@ defineExpose({
 </script>
 
 <template>
-    <div class="min-w-[200px] border border-gray-200 p-2">
+    <div class="h-full border border-gray-200 p-2">
         <div class="flex font-bold">
-            <div class="flex-1">
-                <Notebook class="inline relative -top-0.5" />
+            <div class="flex-1 text-sm md:text-base">
+                <Notebook class="inline relative -top-0.5" :size="iconSize" />
                 Notes
             </div>
             <CirclePlus v-if="foldersCount > 0" class="cursor-pointer" @click="createNewNote" />
@@ -100,14 +103,16 @@ defineExpose({
 
         <hr />
 
-        <NotepadNotesRow
-            v-for="note in list"
-            :key="note.id"
-            :data="note"
-            :is-active="note.id === props.currentNoteId"
-            @set-as-active="setAsActive"
-            @update-notes-list="loadNotesList"
+        <div class="h-[calc(100%-22px)] overflow-auto">
+            <NotepadNotesRow
+                v-for="note in list"
+                :key="note.id"
+                :data="note"
+                :is-active="note.id === props.currentNoteId"
+                @set-as-active="setAsActive"
+                @update-notes-list="loadNotesList"
             />
+        </div>
 
         <div v-if="foldersCount === 0" class="p-2 text-center">
             Before creating a note, create a folder.

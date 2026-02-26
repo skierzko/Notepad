@@ -9,7 +9,7 @@ const props = defineProps<{
   class?: HTMLAttributes["class"]
 }>()
 
-const { toggleSidebar } = useSidebar()
+const { isMobile, toggleSidebar } = useSidebar()
 </script>
 
 <template>
@@ -18,7 +18,10 @@ const { toggleSidebar } = useSidebar()
     data-slot="sidebar-trigger"
     variant="ghost"
     size="icon"
-    :class="cn('h-7 w-7', props.class)"
+    :class="[
+      cn('h-7 w-7', props.class),
+      isMobile && 'bg-cyan-600 animate-pulse text-white'
+    ]"
     @click="toggleSidebar"
   >
     <PanelLeft />

@@ -49,15 +49,15 @@ const removeNoteFetch = async (id: number) => {
 
 <template>
     <div
-        class="flex p-1 mt-2 bg-gray-200/50 cursor-pointer [.active]:bg-cyan-700 [.active]:text-white items-center hover:bg-gray-200/80"
+        class="flex p-1 mt-1 md:mt-2 bg-gray-200/50 cursor-pointer [.active]:bg-cyan-700 [.active]:text-white items-center hover:bg-gray-200/80"
         :class="[isActive && 'active']"
         @click="setAsActive"
     >
         <div class="flex-1 overflow-hidden">
             <div>
-              <div class="text-nowrap text-ellipsis" :title="data.title">{{ data.title }}</div>
+              <div class="text-sm md:text-base text-nowrap text-ellipsis" :title="data.title">{{ data.title }}</div>
             </div>
-            <div class="text-sm">{{ formatDate(data.updated_at) }}</div>
+            <div class="text-xs md:text-base">{{ formatDate(data.updated_at) }}</div>
         </div>
         <div @click.stop>
           <NotesMenuContent :data="data" @removeNote="removeNoteFetch" />
